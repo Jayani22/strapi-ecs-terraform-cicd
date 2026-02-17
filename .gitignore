@@ -11,10 +11,13 @@ app/build
 .env
 app/.env
 
-# Terraform (later)
+# OS
+.DS_Store
+
+# Terraform
 *.tfstate
 *.tfstate.*
 .terraform/
 
-# OS
-.DS_Store
+# Keys
+*.pem
