@@ -51,7 +51,7 @@ jobs:
         run: |
           REPO_NAME=$(terraform output -raw ecr_repository_url)
 
-          cd ../strapi-app
+          cd /strapi-app
           docker build -t $REPO_NAME:$IMAGE_TAG .
           docker push $REPO_NAME:$IMAGE_TAG
 
