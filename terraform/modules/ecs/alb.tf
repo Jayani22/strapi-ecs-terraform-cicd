@@ -14,8 +14,13 @@ resource "aws_lb_target_group" "this" {
   vpc_id      = var.vpc_id
 
   health_check {
-    path = "/admin"
-  }
+    path                = "/"
+    matcher             = "200-499"
+    interval            = 30
+    timeout             = 10
+    healthy_threshold   = 2
+    unhealthy_threshold = 10
+    }
 }
 
 resource "aws_lb_listener" "http" {

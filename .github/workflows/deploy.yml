@@ -62,6 +62,14 @@ jobs:
       # TERRAFORM DEPLOY
       # --------------------
       - name: Terraform Apply
+        working-directory: terraform
+        env:
+          IMAGE_TAG: ${{ github.sha }}
         run: |
-          IMAGE_URI="$(terraform output -raw ecr_repository_url):${{ github.sha }}"
-          terraform apply -auto-approve -var="image_uri=$IMAGE_URI"
+          REPO_NAME=$(terraform output -raw ecr_repository_url)
+          IMAGE_URI="$REPO_NAME:$IMAGE_TAG"
+
+          echo "Deploying image: $IMAGE_URI"
+
+          terraform apply -auto-approve \
+            -var="image_uri=$IMAGE_URI"
