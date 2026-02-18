@@ -1,5 +1,5 @@
 resource "aws_ecs_cluster" "this" {
-    name = "${var.project_name}-cluster"
+    name = "${var.project_name}-cluster-jayani"
 }
 
 resource "random_password" "app_keys" {
@@ -28,7 +28,7 @@ resource "random_password" "jwt_secret" {
 }
 
 resource "aws_ecs_task_definition" "this" {
-    family                   = "${var.project_name}-task"
+    family                   = "${var.project_name}-task-jayani"
     requires_compatibilities = ["FARGATE"]
     network_mode             = "awsvpc"
     cpu                      = "1024"
