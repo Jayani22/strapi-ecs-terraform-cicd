@@ -1,5 +1,5 @@
 resource "aws_security_group" "alb" {
-  name   = "${var.project_name}-alb-sg"
+  name   = "${var.project_name}-alb-sg-jayani"
   vpc_id = var.vpc_id
 
   ingress {

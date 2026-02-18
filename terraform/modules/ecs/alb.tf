@@ -1,5 +1,5 @@
 resource "aws_lb" "this" {
-  name               = "${var.project_name}-alb"
+  name               = "${var.project_name}-alb-jayani"
   internal           = false
   load_balancer_type = "application"
   subnets            = var.subnet_ids
@@ -7,7 +7,7 @@ resource "aws_lb" "this" {
 }
 
 resource "aws_lb_target_group" "this" {
-  name        = "${var.project_name}-tg"
+  name        = "${var.project_name}-tg-jayani"
   port        = 1337
   protocol    = "HTTP"
   target_type = "ip"
