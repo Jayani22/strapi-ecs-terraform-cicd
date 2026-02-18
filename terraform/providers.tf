@@ -1,11 +1,11 @@
 terraform {
   backend "s3" {
-    bucket         = "385046010663-bucket"
+    bucket         = "pearlthoughts-strapi-tfstate"
     key            = "strapi/terraform.tfstate"
     region         = "us-east-1"
     encrypt        = true
   }
-  
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
