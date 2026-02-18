@@ -1,0 +1,54 @@
+# ---------------------------
+# Node / Strapi
+# ---------------------------
+node_modules/
+build/
+dist/
+.cache/
+.tmp/
+
+# Environment files
+.env
+.env.*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ---------------------------
+# Docker
+# ---------------------------
+Dockerfile*
+.dockerignore
+
+# ---------------------------
+# Terraform
+# ---------------------------
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/crash.log
+terraform/.terraform.lock.hcl
+*.tfvars
+
+# ---------------------------
+# AWS / SSH Keys (IMPORTANT)
+# ---------------------------
+strapi-key-jayani.pem
+*.pem
+*.key
+keys/
+
+# ---------------------------
+# OS & Editor
+# ---------------------------
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ---------------------------
+# Misc
+# ---------------------------
+*.log

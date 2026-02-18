@@ -1,24 +1,27 @@
-name: Deploy Strapi to ECS
+name: Deploy Strapi to ECS Fargate
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+
+concurrency:
+  group: terraform
+  cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: terraform
+    env:
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      PROJECT_NAME: strapi
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # --------------------
-      # AWS LOGIN
-      # --------------------
+      # Configure AWS
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -26,50 +29,37 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # --------------------
-      # SETUP TERRAFORM FIRST
-      # --------------------
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform Init
-        run: terraform init
-
-      # --------------------
-      # LOGIN TO ECR
-      # --------------------
+      # Login to ECR
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      # --------------------
-      # BUILD + PUSH IMAGE
-      # --------------------
+      # Build & Push Docker Image
       - name: Build and Push Docker Image
-        working-directory: strapi-app
-        env:
-          IMAGE_TAG: ${{ github.sha }}
+        id: build-image
         run: |
-          REPO_NAME=$(cd ../terraform && terraform output -raw ecr_repository_url)
+          IMAGE_TAG=${GITHUB_SHA}
+          REGISTRY=${{ steps.login-ecr.outputs.registry }}
+          REPO=${PROJECT_NAME}-repo
+          IMAGE_URI=$REGISTRY/$REPO:$IMAGE_TAG
 
-          echo "Repository: $REPO_NAME"
-          echo "Tag: $IMAGE_TAG"
+          docker build -t $IMAGE_URI ./strapi-app
+          docker push $IMAGE_URI
 
-          docker build -t $REPO_NAME:$IMAGE_TAG .
-          docker push $REPO_NAME:$IMAGE_TAG
+          echo "image_uri=$IMAGE_URI" >> $GITHUB_OUTPUT
 
-      # --------------------
-      # TERRAFORM DEPLOY
-      # --------------------
+      # Terraform Setup
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        working-directory: terraform
+        run: terraform init
+
       - name: Terraform Apply
         working-directory: terraform
-        env:
-          IMAGE_TAG: ${{ github.sha }}
         run: |
-          REPO_NAME=$(terraform output -raw ecr_repository_url)
-          IMAGE_URI="$REPO_NAME:$IMAGE_TAG"
-
-          echo "Deploying image: $IMAGE_URI"
-
           terraform apply -auto-approve \
-            -var="image_uri=$IMAGE_URI"
+            -var="aws_region=${AWS_REGION}" \
+            -var="project_name=${PROJECT_NAME}" \
+            -var="image_uri=${{ steps.build-image.outputs.image_uri }}"

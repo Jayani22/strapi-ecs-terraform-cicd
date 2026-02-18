@@ -1,61 +1,78 @@
-# 🚀 Getting started with Strapi
+# Strapi Deployment Automation using GitHub Actions + Terraform
 
-Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.
+This project demonstrates a complete **CI/CD pipeline** for deploying a Dockerized Strapi application using:
 
-### `develop`
+- GitHub Actions (CI/CD)
+- Docker
+- Terraform
+- AWS EC2
+- Docker Hub
 
-Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-develop)
+The goal is to automate build and deployment while following Infrastructure as Code (IaC) practices.
+---
+## Project Overview
+The pipeline automates:
 
-```
-npm run develop
-# or
-yarn develop
-```
+1. Building a Docker image whenever code is pushed.
+2. Pushing the image to Docker Hub.
+3. Deploying the latest image to an EC2 instance using Terraform.
+4. Running the Strapi application inside a Docker container.
 
-### `start`
+---
+## Architecture Workflow
+Developer -> GitHub -> GitHub Actions (CI)
+-> DockerHub -> GitHub Actions(CD)
+-> Terraform -> AWS EC2 -> Strapi Container
 
-Start your Strapi application with autoReload disabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-start)
 
-```
-npm run start
-# or
-yarn start
-```
+### Workflow Summary
 
-### `build`
+### CI Pipeline (Automatic)
+Triggered on push to `main` branch:
 
-Build your admin panel. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-build)
-
-```
-npm run build
-# or
-yarn build
-```
-
-## ⚙️ Deployment
-
-Strapi gives you many possible deployment options for your project including [Strapi Cloud](https://cloud.strapi.io). Browse the [deployment section of the documentation](https://docs.strapi.io/dev-docs/deployment) to find the best solution for your use case.
-
-```
-yarn strapi deploy
-```
-
-## 📚 Learn more
-
-- [Resource center](https://strapi.io/resource-center) - Strapi resource center.
-- [Strapi documentation](https://docs.strapi.io) - Official Strapi documentation.
-- [Strapi tutorials](https://strapi.io/tutorials) - List of tutorials made by the core team and the community.
-- [Strapi blog](https://strapi.io/blog) - Official Strapi blog containing articles made by the Strapi team and the community.
-- [Changelog](https://strapi.io/changelog) - Find out about the Strapi product updates, new features and general improvements.
-
-Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/strapi). Your feedback and contributions are welcome!
-
-## ✨ Community
-
-- [Discord](https://discord.strapi.io) - Come chat with the Strapi community including the core team.
-- [Forum](https://forum.strapi.io/) - Place to discuss, ask questions and find answers, show your Strapi project and get feedback or just talk with other Community members.
-- [Awesome Strapi](https://github.com/strapi/awesome-strapi) - A curated list of awesome things related to Strapi.
+- Checkout source code
+- Build Docker image
+- Push image to Docker Hub
 
 ---
 
-<sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>
+###  CD Pipeline (Manual)
+Triggered manually using GitHub Actions:
+
+- Initialize Terraform
+- Plan & apply infrastructure
+- Create/Update EC2 instance
+- Install Docker via SSH
+- Pull latest Docker image
+- Run Strapi container
+
+---
+
+## 🛠️ Tech Stack
+
+- Strapi (Node.js CMS)
+- Docker
+- GitHub Actions
+- Terraform
+- AWS EC2
+- Docker Hub
+
+---
+
+### GitHub Secrets Used
+
+AWS_ACCESS_KEY_ID
+
+AWS_SECRET_ACCESS_KEY
+
+EC2_SSH_KEY
+
+DOCKER_USERNAME
+
+DOCKER_PASSWORD
+
+
+### Access Application
+After Successful deployment
+
+http://<EC2-PUBLIC-IP>:1337
