@@ -6,6 +6,9 @@ resource "aws_ecs_service" "this" {
     launch_type     = "FARGATE"
     health_check_grace_period_seconds = 180
 
+    lifecycle {
+        ignore_changes = [desired_count]
+    }
 
     network_configuration {
         subnets          = var.subnet_ids

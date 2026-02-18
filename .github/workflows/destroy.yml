@@ -49,6 +49,14 @@ jobs:
                 --repository-name $REPO_NAME \
                 --image-ids "$IMAGES"
             fi
+      - name: Scale ECS service to zero
+        run: |
+            aws ecs update-service \
+            --cluster strapi-cluster \
+            --service strapi-service \
+            --desired-count 0 || true
+
+            sleep 60
 
       - name: Terraform Destroy
         working-directory: terraform
