@@ -18,7 +18,7 @@ resource "aws_security_group" "alb" {
 }
 
 resource "aws_security_group" "ecs" {
-  name   = "${var.project_name}-ecs-sg"
+  name   = "${var.project_name}-ecs-sg-jayani"
   vpc_id = var.vpc_id
 
   ingress {
