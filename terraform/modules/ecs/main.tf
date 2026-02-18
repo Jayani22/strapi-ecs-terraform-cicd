@@ -4,14 +4,40 @@ resource "aws_ecs_cluster" "this" {
 
 resource "aws_cloudwatch_log_group" "this" {
     name = "/ecs/${var.project_name}"
+    retention_in_days = 7
+}
+
+resource "random_password" "app_keys" {
+  length  = 32
+  special = false
+}
+
+resource "random_password" "api_token_salt" {
+  length  = 32
+  special = false
+}
+
+resource "random_password" "admin_jwt_secret" {
+  length  = 32
+  special = false
+}
+
+resource "random_password" "transfer_token_salt" {
+  length  = 32
+  special = false
+}
+
+resource "random_password" "jwt_secret" {
+  length  = 32
+  special = false
 }
 
 resource "aws_ecs_task_definition" "this" {
     family                   = "${var.project_name}-task"
     requires_compatibilities = ["FARGATE"]
     network_mode             = "awsvpc"
-    cpu                      = "512"
-    memory                   = "1024"
+    cpu                      = "1024"
+    memory                   = "2048"
     execution_role_arn       = var.execution_role_arn
 
     container_definitions = jsonencode([{
@@ -26,12 +52,13 @@ resource "aws_ecs_task_definition" "this" {
             { name = "HOST", value = "0.0.0.0" },
             { name = "PORT", value = "1337" },
 
-            { name = "APP_KEYS", value = "key1,key2,key3,key4" },
-            { name = "API_TOKEN_SALT", value = "randomsalt" },
-            { name = "ADMIN_JWT_SECRET", value = "adminsecret" },
-            { name = "TRANSFER_TOKEN_SALT", value = "transfersalt" },
-            { name = "JWT_SECRET", value = "jwtsecret" }
+            { name = "APP_KEYS", value = random_password.app_keys.result },
+            { name = "API_TOKEN_SALT", value = random_password.api_token_salt.result },
+            { name = "ADMIN_JWT_SECRET", value = random_password.admin_jwt_secret.result },
+            { name = "TRANSFER_TOKEN_SALT", value = random_password.transfer_token_salt.result },
+            { name = "JWT_SECRET", value = random_password.jwt_secret.result }
         ]
+
 
         logConfiguration = {
             logDriver = "awslogs"
