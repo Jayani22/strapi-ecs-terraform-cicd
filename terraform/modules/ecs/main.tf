@@ -63,6 +63,8 @@ resource "aws_ecs_task_definition" "this" {
             { name = "DATABASE_NAME", value = var.db_name },
             { name = "DATABASE_USERNAME", value = var.db_username },
             { name = "DATABASE_PASSWORD", value = var.db_password },
+            { name = "DATABASE_SSL", value = "true" },
+            { name = "DATABASE_SSL_REJECT_UNAUTHORIZED", value = "false" },
 
             { name = "APP_KEYS", value = random_password.app_keys.result },
             { name = "API_TOKEN_SALT", value = random_password.api_token_salt.result },
