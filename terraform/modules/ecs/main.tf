@@ -12,31 +12,6 @@ resource "aws_cloudwatch_log_group" "ecs" {
   retention_in_days = 7
 }
 
-resource "random_password" "app_keys" {
-  length  = 32
-  special = false
-}
-
-resource "random_password" "api_token_salt" {
-  length  = 32
-  special = false
-}
-
-resource "random_password" "admin_jwt_secret" {
-  length  = 32
-  special = false
-}
-
-resource "random_password" "transfer_token_salt" {
-  length  = 32
-  special = false
-}
-
-resource "random_password" "jwt_secret" {
-  length  = 32
-  special = false
-}
-
 resource "aws_ecs_task_definition" "this" {
     family                   = "${var.project_name}-task-jayani"
     requires_compatibilities = ["FARGATE"]
@@ -54,14 +29,12 @@ resource "aws_ecs_task_definition" "this" {
         }]
 
         environment = [
-            { name = "HOST", value = "0.0.0.0" },
-            { name = "PORT", value = "1337" },
-
-            { name = "APP_KEYS", value = random_password.app_keys.result },
-            { name = "API_TOKEN_SALT", value = random_password.api_token_salt.result },
-            { name = "ADMIN_JWT_SECRET", value = random_password.admin_jwt_secret.result },
-            { name = "TRANSFER_TOKEN_SALT", value = random_password.transfer_token_salt.result },
-            { name = "JWT_SECRET", value = random_password.jwt_secret.result }
+            { name = "DATABASE_CLIENT", value = "postgres" },
+            { name = "DATABASE_HOST", value = var.db_endpoint },
+            { name = "DATABASE_PORT", value = "5432" },
+            { name = "DATABASE_NAME", value = var.db_name },
+            { name = "DATABASE_USERNAME", value = var.db_username },
+            { name = "DATABASE_PASSWORD", value = var.db_password },
         ]
 
         logConfiguration = {

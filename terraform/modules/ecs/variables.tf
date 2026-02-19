@@ -19,3 +19,18 @@ variable "subnet_ids" {
   type = list(string)
 }
 
+variable "db_endpoint" {
+
+}
+
+variable "db_username" {
+
+}
+
+variable "db_password" {
+  sensitive = true
+}
+
+variable "db_name" {
+
+}
