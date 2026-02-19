@@ -54,17 +54,21 @@ resource "aws_ecs_task_definition" "this" {
         }]
 
         environment = [
-            { name = "APP_KEYS", value = random_password.app_keys.result },
-            { name = "API_TOKEN_SALT", value = random_password.api_token_salt.result },
-            { name = "ADMIN_JWT_SECRET", value = random_password.admin_jwt_secret.result },
-            { name = "TRANSFER_TOKEN_SALT", value = random_password.transfer_token_salt.result },
-            { name = "JWT_SECRET", value = random_password.jwt_secret.result },
+            { name = "HOST", value = "0.0.0.0" },
+            { name = "PORT", value = "1337" },
+            
             { name = "DATABASE_CLIENT", value = "postgres" },
             { name = "DATABASE_HOST", value = var.db_endpoint },
             { name = "DATABASE_PORT", value = "5432" },
             { name = "DATABASE_NAME", value = var.db_name },
             { name = "DATABASE_USERNAME", value = var.db_username },
             { name = "DATABASE_PASSWORD", value = var.db_password },
+
+            { name = "APP_KEYS", value = random_password.app_keys.result },
+            { name = "API_TOKEN_SALT", value = random_password.api_token_salt.result },
+            { name = "ADMIN_JWT_SECRET", value = random_password.admin_jwt_secret.result },
+            { name = "TRANSFER_TOKEN_SALT", value = random_password.transfer_token_salt.result },
+            { name = "JWT_SECRET", value = random_password.jwt_secret.result },
         ]
 
         logConfiguration = {
