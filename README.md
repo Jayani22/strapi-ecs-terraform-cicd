@@ -21,6 +21,7 @@ The entire setup is managed using:
 - Amazon ECR
 - Application Load Balancer
 - CloudWatch Logs
+- ECS Metrics
 - Terraform (modular structure)
 - GitHub Actions
 - Docker
