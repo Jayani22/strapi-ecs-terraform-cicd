@@ -1,6 +1,6 @@
 resource "aws_security_group" "alb" {
   name   = "${var.project_name}-alb-sg-jayani"
-  vpc_id = data.aws_vpc.default.id
+  vpc_id = var.vpc_id
 
   ingress {
     from_port   = 80
@@ -19,7 +19,7 @@ resource "aws_security_group" "alb" {
 
 resource "aws_security_group" "ecs" {
   name   = "${var.project_name}-ecs-sg-jayani"
-  vpc_id = data.aws_vpc.default.id
+  vpc_id = var.vpc_id
 
   ingress {
     from_port       = 1337

@@ -2,7 +2,7 @@ resource "aws_lb" "this" {
   name               = "${var.project_name}-alb-jayani"
   internal           = false
   load_balancer_type = "application"
-  subnets            = data.aws_subnets.default.ids
+  subnets            = var.subnet_ids
   security_groups    = [aws_security_group.alb.id]
 }
 
@@ -11,7 +11,7 @@ resource "aws_lb_target_group" "this" {
   port        = 1337
   protocol    = "HTTP"
   target_type = "ip"
-  vpc_id      = data.aws_vpc.default.id
+  vpc_id      = var.vpc_id
 
   health_check {
     path                = "/"

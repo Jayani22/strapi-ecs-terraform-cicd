@@ -12,6 +12,10 @@ variable "db_username" {
   default = "strapiuser"
 }
 
-variable "vpc_id" {}
+variable "vpc_id" {
 
-variable "subnet_ids" {}
+}
+
+variable "subnet_ids" {
+  
+}

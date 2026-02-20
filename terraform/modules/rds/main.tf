@@ -1,6 +1,6 @@
 resource "aws_db_subnet_group" "this" {
     name       = "strapi-db-subnet-group-jayani"
-    subnet_ids = data.aws_subnets.default.ids
+    subnet_ids = var.subnet_ids
 }
 
 resource "random_password" "db_password" {
@@ -10,7 +10,7 @@ resource "random_password" "db_password" {
 
 resource "aws_security_group" "rds" {
     name   = "strapi-rds-sg-jayani"
-    vpc_id = data.aws_vpc.default.id
+    vpc_id = var.vpc_id
 
     ingress {
         from_port       = 5432
