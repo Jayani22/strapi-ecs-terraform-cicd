@@ -11,10 +11,6 @@ variable "image_uri" {
   type        = string
 }
 
-variable "subnet_ids" {
-  type = list(string)
-}
-
 variable "execution_role_arn" {
   type = string
 }
