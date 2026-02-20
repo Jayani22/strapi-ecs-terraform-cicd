@@ -11,3 +11,7 @@ variable "db_username" {
   type    = string
   default = "strapiuser"
 }
+
+variable "vpc_id" {}
+
+variable "subnet_ids" {}
