@@ -12,8 +12,8 @@ resource "aws_cloudwatch_dashboard" "ecs_dashboard" {
 
         properties = {
           metrics = [
-            ["AWS/ECS", "CPUUtilization", "ClusterName", aws_ecs_cluster.this.name, "ServiceName", aws_ecs_service.this.name],
-            ["AWS/ECS", "MemoryUtilization", "ClusterName", aws_ecs_cluster.this.name, "ServiceName", aws_ecs_service.this.name]
+            ["ECS/ContainerInsights", "CPUUtilization", "ClusterName", aws_ecs_cluster.this.name, "ServiceName", aws_ecs_service.this.name],
+            ["ECS/ContainerInsights", "MemoryUtilization", "ClusterName", aws_ecs_cluster.this.name, "ServiceName", aws_ecs_service.this.name]
           ]
           period = 300
           stat   = "Average"
@@ -30,7 +30,7 @@ resource "aws_cloudwatch_dashboard" "ecs_dashboard" {
 
         properties = {
           metrics = [
-            ["AWS/ECS", "RunningTaskCount", "ClusterName", aws_ecs_cluster.this.name, "ServiceName", aws_ecs_service.this.name]
+            ["ECS/ContainerInsights", "RunningTaskCount", "ClusterName", aws_ecs_cluster.this.name, "ServiceName", aws_ecs_service.this.name]
           ]
           period = 300
           stat   = "Average"
@@ -47,8 +47,8 @@ resource "aws_cloudwatch_dashboard" "ecs_dashboard" {
 
         properties = {
           metrics = [
-            ["AWS/ECS", "NetworkIn", "ClusterName", aws_ecs_cluster.this.name, "ServiceName", aws_ecs_service.this.name],
-            ["AWS/ECS", "NetworkOut", "ClusterName", aws_ecs_cluster.this.name, "ServiceName", aws_ecs_service.this.name]
+            ["ECS/ContainerInsights", "NetworkIn", "ClusterName", aws_ecs_cluster.this.name, "ServiceName", aws_ecs_service.this.name],
+            ["ECS/ContainerInsights", "NetworkOut", "ClusterName", aws_ecs_cluster.this.name, "ServiceName", aws_ecs_service.this.name]
           ]
           period = 300
           stat   = "Sum"
