@@ -18,4 +18,3 @@ module "rds" {
     subnet_ids            = data.aws_subnets.default.ids
     ecs_security_group_id = module.ecs.ecs_security_group_id
 }
-
