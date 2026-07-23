@@ -1,5 +1,10 @@
 name: CI - Build and Push Image
 
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
 on:
   push:
     branches: [main]
@@ -15,6 +20,36 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Install Gitleaks
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/gitleaks/gitleaks/master/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Run Gitleaks
+        run: |
+          gitleaks git --verbose
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: strapi-app/package-lock.json
+
+      - name: Install Dependencies
+        working-directory: ./strapi-app
+        run: npm ci
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
 
       - name: Configure AWS
         uses: aws-actions/configure-aws-credentials@v4
@@ -32,7 +67,7 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build and Push Image
+      - name: Build Docker Image
         id: build-image
         run: |
           IMAGE_TAG=${GITHUB_SHA}
@@ -41,7 +76,19 @@ jobs:
 
           IMAGE_URI="$REGISTRY/$REPO_NAME:$IMAGE_TAG"
 
-          echo "IMAGE_URI=$IMAGE_URI"
+          echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
 
           docker build -t "$IMAGE_URI" ./strapi-app
-          docker push "$IMAGE_URI"
+
+      - name: Scan Docker Image with Trivy
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ${{ env.IMAGE_URI }}
+          format: table
+          severity: HIGH,CRITICAL
+          ignored-unfixed: true
+          exit-code: 1
+
+      - name: Push Docker Image
+        run: |
+          docker push "${{ env.IMAGE_URI }}"
