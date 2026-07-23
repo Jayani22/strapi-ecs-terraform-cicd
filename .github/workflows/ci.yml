@@ -81,12 +81,12 @@ jobs:
           docker build -t "$IMAGE_URI" ./strapi-app
 
       - name: Scan Docker Image with Trivy
-        uses: aquasecurity/trivy-action@0.31.0
+        uses: aquasecurity/trivy-action@v0
         with:
           image-ref: ${{ env.IMAGE_URI }}
           format: table
           severity: HIGH,CRITICAL
-          ignored-unfixed: true
+          ignore-unfixed: true
           exit-code: 1
 
       - name: Push Docker Image
