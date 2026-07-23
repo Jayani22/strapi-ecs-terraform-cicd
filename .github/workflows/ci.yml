@@ -74,25 +74,13 @@ jobs:
       - name: Build Docker Image
         id: build-image
         run: |
-          IMAGE_TAG=${GITHUB_SHA}
-          REGISTRY="${{ steps.login-ecr.outputs.registry }}"
-          REPO_NAME="${PROJECT_NAME}-repo-jayani"
-
-          IMAGE_URI="$REGISTRY/$REPO_NAME:$IMAGE_TAG"
-
-          echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
-
-          docker build -t "$IMAGE_URI" ./strapi-app
+          docker build -t strapi:test ./strapi-app
 
       - name: Scan Docker Image with Trivy
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: ${{ env.IMAGE_URI }}
+          image-ref: strapi:test
           format: table
           severity: HIGH,CRITICAL
           ignore-unfixed: true
           exit-code: 1
-
-      - name: Push Docker Image
-        run: |
-          docker push "${{ env.IMAGE_URI }}"
