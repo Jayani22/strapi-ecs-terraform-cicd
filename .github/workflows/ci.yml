@@ -21,17 +21,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Gitleaks
-        run: |
-          VERSION=8.28.0
-          curl -L https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_linux_x64.tar.gz -o gitleaks.tar.gz
-          tar -xzf gitleaks.tar.gz
-          sudo mv gitleaks /usr/local/bin/
-          gitleaks version
-          
-      - name: Run Gitleaks
-        run: |
-          gitleaks git --verbose
+      - name: TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@v3.90.0
+        with:
+          path: ./
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
