@@ -27,7 +27,7 @@ jobs:
           curl -sSL https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_linux_x64.tar.gz -o gitleaks.tar.gz
           tar -xzf gitleaks.tar.gz
           sudo mv gitleaks /usr/local/bin/
-          gitleaks versionD
+          gitleaks version
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
